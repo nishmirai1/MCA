@@ -1,4 +1,4 @@
-#Write a shell script that folds long lines into 40 columns.Thus any line that exceeds 40 characters must be broken
+#9b.Write a shell script that folds long lines into 40 columns.Thus any line that exceeds 40 characters must be broken
 #after 40th, a “\” is to be appended as the indication of folding and the processing is to be continued with the resid
 #ue.The input is to be supplied through a text file created by the user.
 echo "enter a filename"
