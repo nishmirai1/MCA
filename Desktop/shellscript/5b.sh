@@ -1,4 +1,4 @@
-#Write a shell script to display the calendar for current month with current date replaced by
+#5b.Write a shell script to display the calendar for current month with current date replaced by
 #*or**depending on whether the date has one digit or two digits
 date=`date +%d`
 date=`expr $date + 0`
