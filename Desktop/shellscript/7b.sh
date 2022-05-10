@@ -1,4 +1,4 @@
-#Write a shell script that accept a list of file names as its argument,count and report occurrence of each word
+#7b.Write a shell script that accept a list of file names as its argument,count and report occurrence of each word
 #that is present in the first argument file on other argument files.
 if [ $# -ne 0 ]
 then
