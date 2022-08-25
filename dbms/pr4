@@ -1,0 +1,173 @@
+create table place(place_id char(10) primary key,
+name varchar(20) not null,state varchar(20) not null,
+km int(4)not null,history varchar(30));
+
+ desc place;l
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| place_id | char(10)    | NO   | PRI | NULL    |       |
+| name     | varchar(20) | NO   |     | NULL    |       |
+| state    | varchar(20) | NO   |     | NULL    |       |
+| km       | int         | NO   |     | NULL    |       |
+| history  | varchar(30) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+create table tourist(tourist_id char(10) primary key,
+name varchar(20) not null,age int(2) not null,
+country varchar(20) not null);
+
+desc tourist;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| tourist_id | char(10)    | NO   | PRI | NULL    |       |
+| name       | varchar(20) | NO   |     | NULL    |       |
+| age        | int         | NO   |     | NULL    |       |
+| country    | varchar(20) | NO   |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+create table visit(tourist_id char(10) not null,place_id char(10) not null,
+date date not null,
+foreign key(tourist_id) references tourist(tourist_id),
+foreign key(place_id) references place(place_id));
+
++------------+----------+------+-----+---------+-------+
+| Field      | Type     | Null | Key | Default | Extra |
++------------+----------+------+-----+---------+-------+
+| tourist_id | char(10) | NO   | MUL | NULL    |       |
+| place_id   | char(10) | NO   | MUL | NULL    |       |
+| date       | date     | NO   |     | NULL    |       |
++------------+----------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+
+create table email(tourist_id char(10) not null,email varchar(25),
+foreign key(tourist_id) references tourist(tourist_id),
+primary key(tourist_id,email));
+
+desc email;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| tourist_id | char(10)    | NO   | PRI | NULL    |       |
+| email      | varchar(25) | YES  | PRI | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+insert into place values("p01","jog falls","karnataka",70,"it is good to see");
+insert into place values("p02","hampi","karnataka",400,"we love hampi");
+insert into place values("p03","golden temple","delhi",20,"save me god");
+insert into place values("p04","abbi falls","mumbai",400,"i love nature");
+insert into place values("p05","haripur","jaipur",70,"it is good to see");
+
+insert into tourist values("t01","gururaj",56,"india");
+insert into tourist values("t02","neha",26,"pakisthan");
+insert into tourist values("t03","nishmi",19,"us");
+insert into tourist values("t04","dhanu",56,"india");
+
+insert into visit values("t01","p01","2022-09-03");
+insert into visit values("t01","p03","2022-08-06");
+insert into visit values("t01","p04","2022-07-06");
+insert into visit values("t01","p05","2022-04-06");
+insert into visit values("t02","p01","2022-08-07");
+insert into visit values("t04","p03","2022-03-02");
+
+
+insert into email values("t01","guru@gmail.com");
+insert into email values("t01","guru12@gmail.com");
+insert into email values("t02","neha@gmail.com");
+insert into email values("t03","nishmi@gmail.com");
+insert into email values("t04","dhanu@gmail.com");
+
+mysql> select * from place;
++----------+---------------+-----------+-----+-------------------+
+| place_id | name          | state     | km  | history           |
++----------+---------------+-----------+-----+-------------------+
+| p01      | jog falls     | karnataka |  70 | it is good to see |
+| p02      | hampi         | karnataka | 400 | we love hampi     |
+| p03      | golden temple | delhi     |  20 | save me god       |
+| p04      | abbi falls    | mumbai    | 400 | i love nature     |
+| p05      | haripur       | jaipur    |  70 | it is good to see |
++----------+---------------+-----------+-----+-------------------+
+5 rows in set (0.00 sec)
+
+
+select * from tourist;
++------------+---------+-----+-----------+
+| tourist_id | name    | age | country   |
++------------+---------+-----+-----------+
+| t01        | gururaj |  56 | india     |
+| t02        | neha    |  26 | pakisthan |
+| t03        | nishmi  |  19 | us        |
+| t04        | dhanu   |  56 | india     |
++------------+---------+-----+-----------+
+4 rows in set (0.00 sec)
+
+
+ select * from visit;
++------------+----------+------------+
+| tourist_id | place_id | date       |
++------------+----------+------------+
+| t01        | p01      | 2022-09-03 |
+| t01        | p03      | 2022-08-06 |
+| t01        | p04      | 2022-07-06 |
+| t01        | p05      | 2022-04-06 |
+| t02        | p01      | 2022-08-07 |
+| t04        | p03      | 2022-03-02 |
++------------+----------+------------+
+6 rows in set (0.00 sec)
+
+
+select * from email;
++------------+------------------+
+| tourist_id | email            |
++------------+------------------+
+| t01        | guru@gmail.com   |
+| t01        | guru12@gmail.com |
+| t02        | neha@gmail.com   |
+| t03        | nishmi@gmail.com |
+| t04        | dhanu@gmail.com  |
++------------+------------------+
+5 rows in set (0.00 sec)
+
+
+select state,count(place_id) as places from place group by state order by count(place_id) desc limit 1;
++-----------+--------+
+| state     | places |
++-----------+--------+
+| karnataka |      2 |
++-----------+--------+
+1 row in set (0.00 sec)
+
+
+select p.*,count(v.place_id) as visits from place p,visit v where p.place_id=v.place_id group by v.place_id order by count(v.place_id) desc limit 1;
++----------+-----------+-----------+----+-------------------+-------------------+
+| place_id | name      | state     | km | history           | visits            |
++----------+-----------+-----------+----+-------------------+-------------------+
+| p01      | jog falls | karnataka | 70 | it is good to see |                 2 |
++----------+-----------+-----------+----+-------------------+-------------------+
+1 row in set (0.00 sec)
+
+
+ 
+
+select * from tourist where tourist_id in(select tourist_id from visit v,place p where v.place_id=p.place_id and state="karnataka");
++------------+---------+-----+-----------+
+| tourist_id | name    | age | country   |
++------------+---------+-----+-----------+
+| t01        | gururaj |  56 | india     |
+| t02        | neha    |  26 | pakisthan |
++------------+---------+-----+-----------+
+2 rows in set (0.00 sec)
+
+
+
+
+
+
+
+
+
